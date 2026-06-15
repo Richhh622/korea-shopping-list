@@ -88,10 +88,12 @@ input,textarea,select{font-family:inherit;}
 .field-input:focus{outline:none;border-color:#1a1a2e;}
 .field-select{width:100%;padding:11px 14px;border-radius:12px;border:2px solid #e8e8e8;font-size:14px;margin-bottom:13px;background:#fff;}
 .img-upload-row{display:flex;gap:12px;align-items:center;margin-bottom:13px;}
-.img-preview{width:72px;height:72px;border-radius:12px;border:2px dashed #e0e0e0;background:#fafafa;display:flex;align-items:center;justify-content:center;font-size:26px;overflow:hidden;cursor:pointer;flex-shrink:0;}
+.img-preview{width:72px;height:72px;border-radius:12px;border:2px dashed #e0e0e0;background:#fafafa;display:flex;align-items:center;justify-content:center;font-size:26px;overflow:hidden;cursor:pointer;flex-shrink:0;position:relative;}
 .img-preview img{width:100%;height:100%;object-fit:cover;}
+.img-uploading{position:absolute;inset:0;background:rgba(255,255,255,0.8);display:flex;align-items:center;justify-content:center;font-size:12px;color:#555;font-weight:600;}
 .img-btns{display:flex;flex-direction:column;gap:6px;}
 .img-upload-btn{padding:9px 18px;border-radius:12px;border:none;background:#f0f0f0;color:#555;font-size:13px;font-weight:600;}
+.img-upload-btn:disabled{opacity:0.5;}
 .img-remove-btn{padding:7px 12px;border-radius:12px;border:none;background:#fff0f0;color:#e05555;font-size:12px;font-weight:600;}
 .price-twd-preview{font-size:12px;color:#e05555;margin-bottom:13px;margin-top:-8px;font-weight:600;min-height:16px;}
 .modal-btns{display:flex;gap:10px;margin-top:6px;}
@@ -115,7 +117,6 @@ input,textarea,select{font-family:inherit;}
 .total-label{font-size:12px;color:#aaa;font-weight:600;}
 .total-amount{font-size:16px;font-weight:800;color:#1a1a2e;}
 .total-twd{font-size:12px;color:#e05555;}
-.img-note{font-size:11px;color:#aaa;margin-top:4px;line-height:1.4;}
 </style>
 </head>
 <body>
@@ -131,11 +132,16 @@ const fbApp=initializeApp(FB);
 const auth=getAuth(fbApp);
 const db=getFirestore(fbApp);
 
+// Cloudinary config
+const CLOUD_NAME="dpkyohsbc";
+const UPLOAD_PRESET="my_lists_upload";
+
 let user=null,lists=[],currentList=null,activeStoreIdx=0;
 let modal=null,modalData={};
 let menuOpen=false,themeModal=false;
 let toast=null,toastT=null;
 let unsubLists=null;
+let imgUploading=false;
 let rates={KRW:32,JPY:4.7,USD:31.5,EUR:34,CNY:4.4};
 
 const THEMES=["#FCFDFD","#E7D5E3","#A0B1DE","#FDD3D9","#F2EDE9","#DECBBB","#DFEDF3","#DFE1E7","#DAF0FE","#FFDCE3"];
@@ -146,31 +152,15 @@ const CSYM={KRW:"₩",JPY:"¥",USD:"$",EUR:"€",CNY:"¥"};
 const userTheme=()=>localStorage.getItem("theme")||"#F2EDE9";
 const setTheme=c=>{localStorage.setItem("theme",c);document.body.style.background=c;};
 
-// 圖片存 localStorage，key = listId_ci_ii
-function imgKey(listId,ci,ii){return `img_${listId}_${ci}_${ii}`;}
-function saveImg(listId,ci,ii,dataUrl){try{if(dataUrl)localStorage.setItem(imgKey(listId,ci,ii),dataUrl);else localStorage.removeItem(imgKey(listId,ci,ii));}catch(e){}}
-function loadImg(listId,ci,ii){try{return localStorage.getItem(imgKey(listId,ci,ii))||"";}catch(e){return "";}}
-
-// 把 stores 裡的 image 欄位抽掉再存 Firestore（避免超過 1MB）
-function storesForFirestore(stores){
-  return JSON.parse(JSON.stringify(stores)).map(s=>({
-    ...s,
-    categories:(s.categories||[]).map(c=>({
-      ...c,
-      items:(c.items||[]).map(item=>{const{image,...rest}=item;return rest;})
-    }))
-  }));
-}
-
-// 把圖片從 localStorage 合回來
-function mergeImages(listId,stores){
-  return (stores||[]).map(s=>({
-    ...s,
-    categories:(s.categories||[]).map((c,ci)=>({
-      ...c,
-      items:(c.items||[]).map((item,ii)=>({...item,image:loadImg(listId,ci,ii)}))
-    }))
-  }));
+// 上傳圖片到 Cloudinary，回傳永久 URL
+async function uploadToCloudinary(file){
+  const formData=new FormData();
+  formData.append("file",file);
+  formData.append("upload_preset",UPLOAD_PRESET);
+  const res=await fetch(`https://api.cloudinary.com/v1_1/${CLOUD_NAME}/image/upload`,{method:"POST",body:formData});
+  const data=await res.json();
+  if(data.secure_url) return data.secure_url;
+  throw new Error(data.error?.message||"上傳失敗");
 }
 
 async function fetchRates(){
@@ -324,24 +314,22 @@ function renderDetail(){
           </div>
         </div>
         ${!(cat.items&&cat.items.length)?`<div class="cat-empty">點「＋ 商品」新增</div>`:
-          cat.items.map((item,ii)=>{
-            const img=item.image||loadImg(l.id,ci,ii);
-            return `<div class="item-row">
-              <div class="item-check ${item.done?'done':''}" data-ci="${ci}" data-ii="${ii}" data-toggle="1">
-                ${item.done?`<svg width="11" height="11" viewBox="0 0 11 11"><polyline points="2,5.5 4.5,8 9,3" stroke="white" stroke-width="2" fill="none" stroke-linecap="round"/></svg>`:""}
-              </div>
-              <div class="item-img">${img?`<img src="${img}">`:"🛒"}</div>
-              <div class="item-info">
-                <div class="item-name ${item.done?'done':''}">${item.name}</div>
-                ${item.price?`<div class="item-price">${CSYM[item.currency]||""}${Number(item.price).toLocaleString()}</div><div class="item-twd">${toTWD(item.price,item.currency)}</div>`:""}
-                ${item.note?`<div class="item-note">📝 ${item.note}</div>`:""}
-              </div>
-              <div class="item-row-btns">
-                <button class="item-edit-btn" data-ci="${ci}" data-ii="${ii}" data-edititem="1">✏️</button>
-                <button class="item-del-btn" data-ci="${ci}" data-deli="${ii}">🗑</button>
-              </div>
-            </div>`;
-          }).join("")}
+          cat.items.map((item,ii)=>`
+          <div class="item-row">
+            <div class="item-check ${item.done?'done':''}" data-ci="${ci}" data-ii="${ii}" data-toggle="1">
+              ${item.done?`<svg width="11" height="11" viewBox="0 0 11 11"><polyline points="2,5.5 4.5,8 9,3" stroke="white" stroke-width="2" fill="none" stroke-linecap="round"/></svg>`:""}
+            </div>
+            <div class="item-img">${item.image?`<img src="${item.image}" onerror="this.parentElement.innerHTML='🛒'">`:"🛒"}</div>
+            <div class="item-info">
+              <div class="item-name ${item.done?'done':''}">${item.name}</div>
+              ${item.price?`<div class="item-price">${CSYM[item.currency]||""}${Number(item.price).toLocaleString()}</div><div class="item-twd">${toTWD(item.price,item.currency)}</div>`:""}
+              ${item.note?`<div class="item-note">📝 ${item.note}</div>`:""}
+            </div>
+            <div class="item-row-btns">
+              <button class="item-edit-btn" data-ci="${ci}" data-ii="${ii}" data-edititem="1">✏️</button>
+              <button class="item-del-btn" data-ci="${ci}" data-deli="${ii}">🗑</button>
+            </div>
+          </div>`).join("")}
       </div>`).join("")}
     </div>`:`<div style="padding:40px;text-align:center;color:#bbb;font-size:14px;">點「＋ 店家」新增第一間店</div>`}
   </div>
@@ -376,7 +364,7 @@ function bindDetail(){
     document.querySelectorAll("[data-edititem]").forEach(el=>el.onclick=()=>{
       const ci=parseInt(el.dataset.ci),ii=parseInt(el.dataset.ii);
       const item=store.categories[ci].items[ii];
-      modal="edit-item";modalData={ci,ii,name:item.name,image:loadImg(currentList.id,ci,ii),price:item.price||"",currency:item.currency||"KRW",note:item.note||""};render();
+      modal="edit-item";modalData={ci,ii,name:item.name,image:item.image||"",price:item.price||"",currency:item.currency||"KRW",note:item.note||""};render();
     });
     document.querySelectorAll("[data-deli]").forEach(el=>el.onclick=()=>delItem(parseInt(el.dataset.ci),parseInt(el.dataset.deli)));
   }
@@ -425,14 +413,18 @@ function renderModal(){
       <input class="field-input" id="m-item-name" placeholder="e.g. 防曬乳 SPF50" value="${md.name||""}"/>
       <label class="field-label">商品圖片</label>
       <div class="img-upload-row">
-        <div class="img-preview" id="img-preview-box">${md.image?`<img src="${md.image}">`:"📷"}</div>
+        <div class="img-preview" id="img-preview-box">
+          ${md.image?`<img src="${md.image}">`:"📷"}
+          ${imgUploading?`<div class="img-uploading">上傳中...</div>`:""}
+        </div>
         <div class="img-btns">
-          <button class="img-upload-btn" id="img-upload-btn">從相簿選擇</button>
-          ${md.image?`<button class="img-remove-btn" id="img-remove-btn">移除圖片</button>`:""}
+          <button class="img-upload-btn" id="img-upload-btn" ${imgUploading?"disabled":""}>
+            ${imgUploading?"上傳中...":"從相簿選擇"}
+          </button>
+          ${md.image&&!imgUploading?`<button class="img-remove-btn" id="img-remove-btn">移除圖片</button>`:""}
         </div>
       </div>
-      <div class="img-note">⚠️ 圖片只存在此裝置，不會跨裝置同步</div>
-      <label class="field-label" style="margin-top:10px">幣種</label>
+      <label class="field-label">幣種</label>
       <select class="field-select" id="m-currency">
         ${CURRENCIES.map(c=>`<option value="${c.v}" ${(md.currency||"KRW")===c.v?"selected":""}>${c.l}</option>`).join("")}
       </select>
@@ -466,9 +458,9 @@ function readItemFields(){
 
 function bindModal(){
   const bg=document.getElementById("modal-bg");
-  if(bg)bg.onclick=e=>{if(e.target.id==="modal-bg"){modal=null;render();}};
+  if(bg)bg.onclick=e=>{if(e.target.id==="modal-bg"){modal=null;imgUploading=false;render();}};
   const mc=document.getElementById("m-cancel");
-  if(mc)mc.onclick=()=>{modal=null;render();};
+  if(mc)mc.onclick=()=>{modal=null;imgUploading=false;render();};
   document.querySelectorAll(".emoji-opt").forEach(el=>el.onclick=()=>{
     modalData.name=document.getElementById("m-name")?.value||modalData.name;
     modalData.emoji=el.dataset.emoji;render();
@@ -484,16 +476,25 @@ function bindModal(){
     else if(modal==="edit-cat"){modalData.name=document.getElementById("m-name")?.value?.trim()||"";editCat();}
     else if(modal==="add-item"||modal==="edit-item"){readItemFields();modal==="edit-item"?editItem():addItemFn();}
   };
+
+  // 圖片上傳 → Cloudinary
   const iub=document.getElementById("img-upload-btn");
   if(iub)iub.onclick=()=>{
     readItemFields();
     const inp=document.getElementById("img-file-input");
-    inp.onchange=e=>{
+    inp.onchange=async e=>{
       const f=e.target.files&&e.target.files[0];
       if(!f)return;
-      const reader=new FileReader();
-      reader.onload=x=>{modalData.image=x.target.result;inp.value="";render();};
-      reader.readAsDataURL(f);
+      inp.value="";
+      imgUploading=true;render();
+      try{
+        const url=await uploadToCloudinary(f);
+        modalData.image=url;
+      }catch(err){
+        showToast("圖片上傳失敗，請再試");
+      }finally{
+        imgUploading=false;render();
+      }
     };
     inp.click();
   };
@@ -513,11 +514,8 @@ function bindModal(){
 async function saveList(){
   if(!currentList)return;
   try{
-    // 圖片不存 Firestore，只存文字資料
-    const storesClean=storesForFirestore(currentList.stores||[]);
-    await updateDoc(doc(db,"lists",currentList.id),{stores:storesClean,updatedAt:serverTimestamp()});
+    await updateDoc(doc(db,"lists",currentList.id),{stores:currentList.stores||[],updatedAt:serverTimestamp()});
   }catch(e){
-    console.error("saveList error:",e);
     showToast("儲存失敗："+e.code);
   }
 }
@@ -531,7 +529,8 @@ async function createList(){
 async function editList(){
   if(!modalData.name){showToast("請輸入清單名稱");return;}
   currentList.name=modalData.name;currentList.emoji=modalData.emoji;
-  try{await updateDoc(doc(db,"lists",currentList.id),{name:modalData.name,emoji:modalData.emoji});}catch(e){showToast("儲存失敗："+e.code);}
+  try{await updateDoc(doc(db,"lists",currentList.id),{name:modalData.name,emoji:modalData.emoji});}
+  catch(e){showToast("儲存失敗："+e.code);}
   modal=null;render();
 }
 async function openList(id){
@@ -539,7 +538,7 @@ async function openList(id){
     const snap=await getDoc(doc(db,"lists",id));
     if(!snap.exists()){showToast("找不到清單");return;}
     currentList={id:snap.id,...snap.data()};
-    currentList.stores=mergeImages(id,currentList.stores||[]);
+    currentList.stores=currentList.stores||[];
     activeStoreIdx=0;modal=null;render();
   }catch(e){showToast("無法開啟："+e.code);}
 }
@@ -582,24 +581,18 @@ function addItemFn(){
   const s=currentList.stores[activeStoreIdx];
   const cat=s.categories[modalData.ci];
   cat.items=cat.items||[];
-  const ii=cat.items.length;
-  // 先存圖片到 localStorage
-  saveImg(currentList.id,modalData.ci,ii,modalData.image||"");
-  cat.items.push({name:modalData.name,price:modalData.price||"",currency:modalData.currency||"KRW",note:modalData.note||"",done:false});
+  cat.items.push({name:modalData.name,image:modalData.image||"",price:modalData.price||"",currency:modalData.currency||"KRW",note:modalData.note||"",done:false});
   modal=null;saveList();render();
 }
 function editItem(){
   if(!modalData.name){showToast("請輸入商品名稱");return;}
-  const s=currentList.stores[activeStoreIdx];
-  const cat=s.categories[modalData.ci];
+  const cat=currentList.stores[activeStoreIdx].categories[modalData.ci];
   const old=cat.items[modalData.ii];
-  saveImg(currentList.id,modalData.ci,modalData.ii,modalData.image||"");
-  cat.items[modalData.ii]={name:modalData.name,price:modalData.price||"",currency:modalData.currency||"KRW",note:modalData.note||"",done:old.done||false};
+  cat.items[modalData.ii]={name:modalData.name,image:modalData.image||"",price:modalData.price||"",currency:modalData.currency||"KRW",note:modalData.note||"",done:old.done||false};
   modal=null;saveList();render();
 }
 function delItem(ci,ii){
   currentList.stores[activeStoreIdx].categories[ci].items.splice(ii,1);
-  saveImg(currentList.id,ci,ii,"");
   saveList();render();
 }
 function toggleItem(ci,ii){
