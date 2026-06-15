@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>My Lists ✨</title>
+<title>Prep2Do</title>
 <style>
 *{box-sizing:border-box;margin:0;padding:0;}
 body{font-family:system-ui,-apple-system,sans-serif;background:#F2EDE9;min-height:100vh;transition:background 0.3s;}
@@ -12,16 +12,18 @@ input,textarea,select{font-family:inherit;}
 .login-wrap{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:24px;}
 .login-card{background:#fff;border-radius:28px;padding:44px 32px;text-align:center;max-width:360px;width:100%;box-shadow:0 20px 60px rgba(0,0,0,0.10);}
 .login-logo{font-size:56px;margin-bottom:14px;}
-.login-title{font-size:28px;font-weight:800;color:#1a1a2e;margin-bottom:6px;}
-.login-sub{color:#999;font-size:14px;margin-bottom:32px;line-height:1.6;}
+.login-title{font-size:28px;font-weight:800;color:#1a1a2e;margin-bottom:4px;}
+.login-slogan{font-size:13px;color:#aaa;margin-bottom:28px;letter-spacing:1px;}
 .google-btn{display:flex;align-items:center;justify-content:center;gap:10px;width:100%;padding:15px;border-radius:16px;border:2px solid #e8e8e8;background:#fff;font-size:15px;font-weight:700;color:#333;}
 .google-btn svg{width:20px;height:20px;flex-shrink:0;}
 .header{padding:14px 16px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;background:inherit;border-bottom:1px solid rgba(0,0,0,0.06);}
 .header-title{font-size:17px;font-weight:800;color:#1a1a2e;}
-.header-right{display:flex;align-items:center;gap:10px;}
+.header-right{display:flex;align-items:center;gap:8px;}
 .avatar{width:34px;height:34px;border-radius:50%;object-fit:cover;cursor:pointer;border:2px solid rgba(0,0,0,0.1);}
 .avatar-ph{width:34px;height:34px;border-radius:50%;background:#e0e0e0;display:flex;align-items:center;justify-content:center;font-size:16px;cursor:pointer;}
-.theme-btn{background:none;border:none;font-size:20px;padding:4px;}
+.icon-btn{background:none;border:none;font-size:18px;padding:5px;border-radius:8px;color:#555;}
+.icon-btn:hover{background:rgba(0,0,0,0.06);}
+.lang-btn{background:rgba(0,0,0,0.06);border:none;font-size:12px;font-weight:700;padding:5px 10px;border-radius:10px;color:#555;letter-spacing:0.5px;}
 .home-wrap{max-width:540px;margin:0 auto;padding:16px 16px 80px;}
 .greeting{margin-bottom:20px;}
 .greeting h2{font-size:22px;font-weight:800;color:#1a1a2e;}
@@ -66,7 +68,8 @@ input,textarea,select{font-family:inherit;}
 .cat-edit-btn{padding:5px 8px;border-radius:10px;border:none;background:#f0f0f0;color:#555;font-size:12px;}
 .cat-del-btn{padding:5px 8px;border-radius:10px;border:none;background:#ffe8e8;color:#e05555;font-size:12px;}
 .cat-empty{padding:16px;text-align:center;color:#ccc;font-size:13px;}
-.item-row{display:flex;align-items:center;gap:10px;padding:10px 14px;border-bottom:1px solid #f8f8f8;}
+.item-row{display:flex;align-items:center;gap:10px;padding:10px 14px;border-bottom:1px solid #f8f8f8;transition:opacity 0.2s;}
+.item-row.done-row{opacity:0.55;}
 .item-img{width:52px;height:52px;border-radius:10px;background:#f0f0f0;display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0;overflow:hidden;}
 .item-img img{width:100%;height:100%;object-fit:cover;}
 .item-info{flex:1;min-width:0;}
@@ -75,7 +78,7 @@ input,textarea,select{font-family:inherit;}
 .item-price{font-size:13px;color:#e05555;font-weight:700;margin-top:1px;}
 .item-twd{font-size:11px;color:#aaa;}
 .item-note{font-size:11px;color:#bbb;margin-top:2px;}
-.item-check{width:22px;height:22px;border-radius:50%;border:2px solid #ddd;background:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;transition:all 0.15s;}
+.item-check{width:22px;height:22px;border-radius:50%;border:2px solid #ddd;background:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;transition:all 0.2s;}
 .item-check.done{background:#1a1a2e;border-color:#1a1a2e;}
 .item-row-btns{display:flex;gap:4px;}
 .item-edit-btn{padding:5px 8px;border-radius:8px;border:none;font-size:13px;background:#f0f0f0;color:#555;}
@@ -90,7 +93,7 @@ input,textarea,select{font-family:inherit;}
 .img-upload-row{display:flex;gap:12px;align-items:center;margin-bottom:13px;}
 .img-preview{width:72px;height:72px;border-radius:12px;border:2px dashed #e0e0e0;background:#fafafa;display:flex;align-items:center;justify-content:center;font-size:26px;overflow:hidden;cursor:pointer;flex-shrink:0;position:relative;}
 .img-preview img{width:100%;height:100%;object-fit:cover;}
-.img-uploading{position:absolute;inset:0;background:rgba(255,255,255,0.8);display:flex;align-items:center;justify-content:center;font-size:12px;color:#555;font-weight:600;}
+.img-uploading{position:absolute;inset:0;background:rgba(255,255,255,0.85);display:flex;align-items:center;justify-content:center;font-size:11px;color:#555;font-weight:600;}
 .img-btns{display:flex;flex-direction:column;gap:6px;}
 .img-upload-btn{padding:9px 18px;border-radius:12px;border:none;background:#f0f0f0;color:#555;font-size:13px;font-weight:600;}
 .img-upload-btn:disabled{opacity:0.5;}
@@ -102,9 +105,13 @@ input,textarea,select{font-family:inherit;}
 .emoji-grid{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px;}
 .emoji-opt{width:40px;height:40px;border-radius:10px;border:2px solid #e8e8e8;background:#fafafa;font-size:20px;display:flex;align-items:center;justify-content:center;cursor:pointer;}
 .emoji-opt.sel{border-color:#1a1a2e;background:#f0f0f0;}
-.theme-grid{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:16px;}
-.theme-dot{width:36px;height:36px;border-radius:50%;cursor:pointer;border:3px solid transparent;transition:transform 0.15s;}
-.theme-dot.sel{border-color:#1a1a2e;transform:scale(1.15);}
+
+/* Theme picker */
+.theme-section-label{font-size:11px;font-weight:700;color:#aaa;margin:12px 0 6px;text-transform:uppercase;letter-spacing:0.5px;}
+.theme-row{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:4px;}
+.theme-dot{width:30px;height:30px;border-radius:50%;cursor:pointer;border:3px solid transparent;transition:transform 0.15s;flex-shrink:0;}
+.theme-dot.sel{border-color:#1a1a2e;transform:scale(1.2);}
+
 .share-box{background:#f8f8f8;border-radius:12px;padding:12px 14px;font-size:13px;color:#555;word-break:break-all;margin-bottom:14px;}
 .copy-btn{width:100%;padding:13px;border-radius:14px;border:none;background:#1a1a2e;color:#fff;font-size:15px;font-weight:700;margin-bottom:10px;}
 .user-menu{position:fixed;top:58px;right:12px;background:#fff;border-radius:16px;box-shadow:0 8px 30px rgba(0,0,0,0.15);padding:8px;z-index:200;min-width:180px;}
@@ -132,7 +139,6 @@ const fbApp=initializeApp(FB);
 const auth=getAuth(fbApp);
 const db=getFirestore(fbApp);
 
-// Cloudinary config
 const CLOUD_NAME="dpkyohsbc";
 const UPLOAD_PRESET="my_lists_upload";
 
@@ -142,43 +148,115 @@ let menuOpen=false,themeModal=false;
 let toast=null,toastT=null;
 let unsubLists=null;
 let imgUploading=false;
+let lang=localStorage.getItem("lang")||"zh";
 let rates={KRW:32,JPY:4.7,USD:31.5,EUR:34,CNY:4.4};
 
-const THEMES=["#FCFDFD","#E7D5E3","#A0B1DE","#FDD3D9","#F2EDE9","#DECBBB","#DFEDF3","#DFE1E7","#DAF0FE","#FFDCE3"];
+// ── i18n ──
+const T={
+  zh:{
+    appName:"Prep2Do",slogan:"Go Prep. To Do.",
+    login:"使用 Google 登入",
+    hi:"Hi",lists:"份清單",
+    myLists:"我的清單",sharedLists:"共享給我的",newList:"新增清單",
+    back:"← 返回",stores:"店家",
+    editName:"✏️ 編輯名稱",share:"🔗 分享",del:"🗑 刪除",
+    addStore:"＋ 店家",addCat:"＋ 分類",addItem:"＋ 商品",
+    editStore:"✏️",delStore:"🗑",
+    newListTitle:"✨ 新增清單",editListTitle:"✏️ 編輯清單",
+    newStoreTitle:"🏪 新增店家",editStoreTitle:"✏️ 編輯店家",
+    newCatTitle:"📂 新增分類",editCatTitle:"✏️ 編輯分類",
+    newItemTitle:"＋ 新增商品",editItemTitle:"✏️ 編輯商品",
+    listName:"清單名稱",storeName:"店名",catName:"分類名稱",itemName:"商品名稱",
+    listNamePh:"e.g. 韓國旅行",storeNamePh:"e.g. Olive Young",catNamePh:"e.g. 化妝品類💄",itemNamePh:"e.g. 防曬乳 SPF50",
+    emoji:"Emoji",currency:"幣種",price:"價格",note:"備註",notePh:"e.g. 買兩個、限定色",
+    image:"商品圖片",choosePhoto:"從相簿選擇",uploading:"上傳中...",removeImg:"移除圖片",
+    save:"儲存",create:"建立",cancel:"取消",add:"新增",
+    theme:"🎨 選擇主題",close:"關閉",logout:"登出",
+    shareTitle:"🔗 分享清單",shareDesc:"把連結傳給朋友，對方登入後就能一起編輯。",copyLink:"複製連結",copied:"✅ 連結已複製！",
+    delListConfirm:"刪除這份清單？",delStoreConfirm:"刪除這間店？",delCatConfirm:"刪除此分類？",
+    emptyItems:"點「＋ 商品」新增",emptyStore:"點「＋ 店家」新增第一間店",
+    totalLabel:"韓元預估總計",
+    enterListName:"請輸入清單名稱",enterStoreName:"請輸入店名",enterCatName:"請輸入分類名稱",enterItemName:"請輸入商品名稱",
+    uploadFail:"圖片上傳失敗，請再試",saveFail:"儲存失敗",createFail:"建立失敗",openFail:"無法開啟",delFail:"刪除失敗",joinFail:"無法加入",
+    created:"✨ 清單已建立！",deleted:"清單已刪除",joined:"✅ 已加入共享清單！",loginFail:"登入失敗",
+    shared:"共享",
+    pricePh:"e.g. 15000",
+    currencies:["韓元 ₩","日圓 ¥","美元 $","歐元 €","人民幣 ¥"],
+  },
+  en:{
+    appName:"Prep2Do",slogan:"Go Prep. To Do.",
+    login:"Sign in with Google",
+    hi:"Hi",lists:"lists",
+    myLists:"My Lists",sharedLists:"Shared with Me",newList:"New List",
+    back:"← Back",stores:"stores",
+    editName:"✏️ Edit Name",share:"🔗 Share",del:"🗑 Delete",
+    addStore:"＋ Store",addCat:"＋ Category",addItem:"＋ Item",
+    editStore:"✏️",delStore:"🗑",
+    newListTitle:"✨ New List",editListTitle:"✏️ Edit List",
+    newStoreTitle:"🏪 New Store",editStoreTitle:"✏️ Edit Store",
+    newCatTitle:"📂 New Category",editCatTitle:"✏️ Edit Category",
+    newItemTitle:"＋ New Item",editItemTitle:"✏️ Edit Item",
+    listName:"List Name",storeName:"Store Name",catName:"Category Name",itemName:"Item Name",
+    listNamePh:"e.g. Korea Trip",storeNamePh:"e.g. Olive Young",catNamePh:"e.g. Skincare 🧴",itemNamePh:"e.g. Sunscreen SPF50",
+    emoji:"Emoji",currency:"Currency",price:"Price",note:"Note",notePh:"e.g. Buy 2, limited edition",
+    image:"Photo",choosePhoto:"Choose from Album",uploading:"Uploading...",removeImg:"Remove Photo",
+    save:"Save",create:"Create",cancel:"Cancel",add:"Add",
+    theme:"🎨 Theme",close:"Close",logout:"Sign Out",
+    shareTitle:"🔗 Share List",shareDesc:"Send this link to friends. They can edit after signing in.",copyLink:"Copy Link",copied:"✅ Link copied!",
+    delListConfirm:"Delete this list?",delStoreConfirm:"Delete this store?",delCatConfirm:"Delete this category?",
+    emptyItems:"Tap ＋ Item to add",emptyStore:"Tap ＋ Store to add first store",
+    totalLabel:"KRW Estimated Total",
+    enterListName:"Please enter a list name",enterStoreName:"Please enter a store name",enterCatName:"Please enter a category name",enterItemName:"Please enter an item name",
+    uploadFail:"Upload failed, please try again",saveFail:"Save failed",createFail:"Create failed",openFail:"Cannot open",delFail:"Delete failed",joinFail:"Cannot join",
+    created:"✨ List created!",deleted:"List deleted",joined:"✅ Joined shared list!",loginFail:"Sign in failed",
+    shared:"Shared",
+    pricePh:"e.g. 15000",
+    currencies:["KRW ₩","JPY ¥","USD $","EUR €","CNY ¥"],
+  }
+};
+const t=()=>T[lang];
+
+const THEMES={
+  "紅/Red":["#FBDCE7","#7E0910"],
+  "橙/Orange":["#FAD192","#F08C00"],
+  "黃/Yellow":["#FFEB7D","#FBCE25"],
+  "綠/Green":["#C2DCCA","#51662A","#2F7F4C"],
+  "藍/Blue":["#B4DDDA","#C9E7EE","#ADDCED","#0083CD"],
+  "靛/Indigo":["#4A8FCC","#02307E"],
+  "紫/Purple":["#D4C4DB","#AC91C4"],
+  "棕/Brown":["#F5F1EA","#7D5A44"],
+  "灰/Gray":["#D3D3D4","#808080"],
+  "白/White":["#FFFFFF"],
+};
+
 const EMOJIS=["🛒","🇰🇷","🇯🇵","🇹🇼","🇺🇸","🛍️","💄","💊","🏕️","🎄","🎓","🏠","🐶","🍰","☕","✈️","🏖️","🎁","📦","🏋️","📚","🌏","🎀","🧴"];
-const CURRENCIES=[{v:"KRW",l:"韓元 ₩"},{v:"JPY",l:"日圓 ¥"},{v:"USD",l:"美元 $"},{v:"EUR",l:"歐元 €"},{v:"CNY",l:"人民幣 ¥"}];
+const CVALS=["KRW","JPY","USD","EUR","CNY"];
 const CSYM={KRW:"₩",JPY:"¥",USD:"$",EUR:"€",CNY:"¥"};
 
 const userTheme=()=>localStorage.getItem("theme")||"#F2EDE9";
 const setTheme=c=>{localStorage.setItem("theme",c);document.body.style.background=c;};
+const toggleLang=()=>{lang=lang==="zh"?"en":"zh";localStorage.setItem("lang",lang);render();};
 
-// 上傳圖片到 Cloudinary，回傳永久 URL
 async function uploadToCloudinary(file){
-  const formData=new FormData();
-  formData.append("file",file);
-  formData.append("upload_preset",UPLOAD_PRESET);
-  const res=await fetch(`https://api.cloudinary.com/v1_1/${CLOUD_NAME}/image/upload`,{method:"POST",body:formData});
-  const data=await res.json();
-  if(data.secure_url) return data.secure_url;
-  throw new Error(data.error?.message||"上傳失敗");
+  const fd=new FormData();
+  fd.append("file",file);fd.append("upload_preset",UPLOAD_PRESET);
+  const res=await fetch(`https://api.cloudinary.com/v1_1/${CLOUD_NAME}/image/upload`,{method:"POST",body:fd});
+  const d=await res.json();
+  if(d.secure_url)return d.secure_url;
+  throw new Error(d.error?.message||"fail");
 }
-
 async function fetchRates(){
-  try{
-    const r=await fetch("https://open.er-api.com/v6/latest/TWD");
-    const d=await r.json();
-    if(d.rates){rates.KRW=d.rates.KRW||32;rates.JPY=d.rates.JPY||4.7;rates.USD=1/(d.rates.USD||0.032);rates.EUR=1/(d.rates.EUR||0.029);rates.CNY=1/(d.rates.CNY||0.22);}
-  }catch(e){}
+  try{const r=await fetch("https://open.er-api.com/v6/latest/TWD");const d=await r.json();if(d.rates){rates.KRW=d.rates.KRW||32;rates.JPY=d.rates.JPY||4.7;rates.USD=1/(d.rates.USD||0.032);rates.EUR=1/(d.rates.EUR||0.029);rates.CNY=1/(d.rates.CNY||0.22);}}catch(e){}
 }
 function toTWD(amount,currency){
   const n=Number(amount);if(!n||!currency)return "";
-  let t=0;
-  if(currency==="KRW")t=n/rates.KRW;
-  else if(currency==="JPY")t=n/rates.JPY;
-  else if(currency==="USD")t=n*rates.USD;
-  else if(currency==="EUR")t=n*rates.EUR;
-  else if(currency==="CNY")t=n*rates.CNY;
-  return t?`≈ NT$${Math.round(t).toLocaleString()}`:"";
+  let tv=0;
+  if(currency==="KRW")tv=n/rates.KRW;
+  else if(currency==="JPY")tv=n/rates.JPY;
+  else if(currency==="USD")tv=n*rates.USD;
+  else if(currency==="EUR")tv=n*rates.EUR;
+  else if(currency==="CNY")tv=n*rates.CNY;
+  return tv?`≈ NT$${Math.round(tv).toLocaleString()}`:"";
 }
 
 function render(){
@@ -191,34 +269,40 @@ function render(){
 
 function renderLogin(){
   return `<div class="login-wrap"><div class="login-card">
-    <div class="login-logo">✨</div>
-    <div class="login-title">My Lists</div>
-    <div class="login-sub">旅行、採買、任何事<br>一個地方管理所有清單</div>
+    <div class="login-logo">✅</div>
+    <div class="login-title">${t().appName}</div>
+    <div class="login-slogan">${t().slogan}</div>
     <button class="google-btn" id="g-login">
       <svg viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
-      使用 Google 登入
+      ${t().login}
     </button>
   </div></div>`;
 }
-function bindLogin(){document.getElementById("g-login").onclick=()=>signInWithPopup(auth,new GoogleAuthProvider()).catch(()=>showToast("登入失敗"));}
+function bindLogin(){document.getElementById("g-login").onclick=()=>signInWithPopup(auth,new GoogleAuthProvider()).catch(()=>showToast(t().loginFail));}
+
+function headerRight(){
+  const av=user.photoURL?`<img class="avatar" src="${user.photoURL}" id="av-btn">`:`<div class="avatar-ph" id="av-btn">👤</div>`;
+  return `<div class="header-right">
+    <button class="lang-btn" id="lang-btn">${lang==="zh"?"EN":"中文"}</button>
+    <button class="icon-btn" id="theme-open-btn">🎨</button>
+    ${av}
+  </div>`;
+}
 
 function renderHome(){
   const name=(user.displayName||"").split(" ")[0];
   const myLists=lists.filter(l=>l.ownerId===user.uid);
   const sharedLists=lists.filter(l=>l.ownerId!==user.uid);
-  const av=user.photoURL?`<img class="avatar" src="${user.photoURL}" id="av-btn">`:`<div class="avatar-ph" id="av-btn">👤</div>`;
   return `
-  <div class="header"><div class="header-title">✨ My Lists</div>
-    <div class="header-right"><button class="theme-btn" id="theme-open-btn">🎨</button>${av}</div>
-  </div>
+  <div class="header"><div class="header-title">✅ ${t().appName}</div>${headerRight()}</div>
   <div class="home-wrap">
-    <div class="greeting"><h2>Hi, ${name} 👋</h2><p>你有 ${myLists.length} 份清單</p></div>
-    <div class="section-label">我的清單</div>
+    <div class="greeting"><h2>${t().hi}, ${name} 👋</h2><p>${myLists.length} ${t().lists}</p></div>
+    <div class="section-label">${t().myLists}</div>
     <div class="lists-grid">
       ${myLists.map(l=>renderListCard(l)).join("")}
-      <div class="new-card" id="new-list-btn"><div class="new-card-icon">＋</div><div class="new-card-label">新增清單</div></div>
+      <div class="new-card" id="new-list-btn"><div class="new-card-icon">＋</div><div class="new-card-label">${t().newList}</div></div>
     </div>
-    ${sharedLists.length?`<div class="section-label">共享給我的</div><div class="lists-grid">${sharedLists.map(l=>renderListCard(l,true)).join("")}</div>`:""}
+    ${sharedLists.length?`<div class="section-label">${t().sharedLists}</div><div class="lists-grid">${sharedLists.map(l=>renderListCard(l,true)).join("")}</div>`:""}
   </div>
   ${menuOpen?renderUserMenu():""}
   ${themeModal?renderThemeModal():""}
@@ -229,31 +313,35 @@ function renderListCard(l,shared){
   const stores=l.stores||[];
   const total=stores.reduce((a,s)=>a+(s.categories||[]).reduce((b,c)=>b+(c.items||[]).length,0),0);
   return `<div class="list-card" data-lid="${l.id}">
-    ${shared?'<div class="shared-badge">共享</div>':""}
+    ${shared?`<div class="shared-badge">${t().shared}</div>`:""}
     <div class="list-card-emoji">${l.emoji||"📋"}</div>
     <div class="list-card-name">${l.name}</div>
-    <div class="list-card-meta">${stores.length} 店家 · ${total} 商品</div>
+    <div class="list-card-meta">${stores.length} ${t().stores} · ${total}</div>
   </div>`;
 }
 function renderUserMenu(){
   return `<div class="user-menu" id="u-menu">
     <div class="user-menu-email">${user.email}</div>
-    <div class="user-menu-item danger" id="logout-btn">登出</div>
+    <div class="user-menu-item danger" id="logout-btn">${t().logout}</div>
   </div>`;
 }
 function renderThemeModal(){
   return `<div class="modal-bg" id="theme-modal-bg"><div class="modal">
-    <div class="modal-title">🎨 選擇主題顏色</div>
-    <div class="theme-grid">${THEMES.map(c=>`<div class="theme-dot ${userTheme()===c?'sel':''}" style="background:${c}" data-color="${c}"></div>`).join("")}</div>
-    <div class="modal-btns"><button class="modal-cancel" id="theme-close">關閉</button></div>
+    <div class="modal-title">${t().theme}</div>
+    ${Object.entries(THEMES).map(([label,colors])=>`
+      <div class="theme-section-label">${label}</div>
+      <div class="theme-row">${colors.map(c=>`<div class="theme-dot ${userTheme()===c?'sel':''}" style="background:${c};${c==="#FFFFFF"?'border:2px solid #ddd;':''}" data-color="${c}" title="${c}"></div>`).join("")}</div>
+    `).join("")}
+    <div class="modal-btns" style="margin-top:16px"><button class="modal-cancel" id="theme-close">${t().close}</button></div>
   </div></div>`;
 }
 function bindHome(){
   document.querySelectorAll(".list-card").forEach(el=>el.onclick=()=>openList(el.dataset.lid));
   document.getElementById("new-list-btn").onclick=()=>{modal="new-list";modalData={name:"",emoji:"🛒"};render();};
+  document.getElementById("lang-btn").onclick=()=>toggleLang();
+  document.getElementById("theme-open-btn").onclick=e=>{e.stopPropagation();themeModal=!themeModal;menuOpen=false;render();};
   const av=document.getElementById("av-btn");
   if(av)av.onclick=e=>{e.stopPropagation();menuOpen=!menuOpen;themeModal=false;render();};
-  document.getElementById("theme-open-btn").onclick=e=>{e.stopPropagation();themeModal=!themeModal;menuOpen=false;render();};
   if(menuOpen){
     document.getElementById("logout-btn").onclick=()=>{signOut(auth);menuOpen=false;};
     setTimeout(()=>{document.onclick=e=>{if(!document.getElementById("u-menu")?.contains(e.target)){menuOpen=false;render();document.onclick=null;}};},0);
@@ -272,35 +360,34 @@ function renderDetail(){
   const store=stores[activeStoreIdx]||stores[0];
   const isOwner=l.ownerId===user.uid;
   const totalKRW=stores.reduce((a,s)=>(s.categories||[]).reduce((b,c)=>(c.items||[]).filter(i=>i.currency==="KRW").reduce((x,i)=>x+(Number(i.price)||0),b),a),0);
-  const av=user.photoURL?`<img class="avatar" src="${user.photoURL}" id="av-btn">`:`<div class="avatar-ph" id="av-btn">👤</div>`;
   return `
   <div class="header">
-    <button class="back-btn" id="back-btn">← 返回</button>
-    <div class="header-right"><button class="theme-btn" id="theme-open-btn">🎨</button>${av}</div>
+    <button class="back-btn" id="back-btn">${t().back}</button>
+    ${headerRight()}
   </div>
   <div class="detail-wrap">
     <div class="detail-top">
       <div class="detail-emoji">${l.emoji||"📋"}</div>
       <div class="detail-name">${l.name}</div>
-      <div class="detail-meta">${stores.length} 店家</div>
+      <div class="detail-meta">${stores.length} ${t().stores}</div>
       <div class="detail-actions">
-        ${isOwner?`<button class="detail-action-btn" id="edit-list-btn">✏️ 編輯名稱</button>`:""}
-        ${isOwner?`<button class="detail-action-btn" id="share-btn">🔗 分享</button>`:""}
-        ${isOwner?`<button class="detail-action-btn danger-action" id="del-list-btn">🗑 刪除</button>`:""}
+        ${isOwner?`<button class="detail-action-btn" id="edit-list-btn">${t().editName}</button>`:""}
+        ${isOwner?`<button class="detail-action-btn" id="share-btn">${t().share}</button>`:""}
+        ${isOwner?`<button class="detail-action-btn danger-action" id="del-list-btn">${t().del}</button>`:""}
       </div>
     </div>
     <div class="stores-scroll">
       ${stores.map((s,i)=>`<button class="store-tab ${i===activeStoreIdx?'active':''}" data-si="${i}">${s.emoji||""} ${s.name}</button>`).join("")}
-      <button class="add-store-tab" id="add-store-btn">＋ 店家</button>
+      <button class="add-store-tab" id="add-store-btn">${t().addStore}</button>
     </div>
     ${store?`
     <div class="store-body">
       <div class="store-header">
         <div class="store-title">${store.emoji||""} ${store.name}</div>
         <div class="store-header-btns">
-          <button class="sm-btn" id="edit-store-btn">✏️</button>
-          <button class="sm-btn" id="add-cat-btn">＋ 分類</button>
-          <button class="sm-btn danger-sm" id="del-store-btn">🗑</button>
+          <button class="sm-btn" id="edit-store-btn">${t().editStore}</button>
+          <button class="sm-btn" id="add-cat-btn">${t().addCat}</button>
+          <button class="sm-btn danger-sm" id="del-store-btn">${t().delStore}</button>
         </div>
       </div>
       ${(store.categories||[]).map((cat,ci)=>`
@@ -308,14 +395,14 @@ function renderDetail(){
         <div class="cat-header">
           <div class="cat-name">${cat.name}</div>
           <div class="cat-btns">
-            <button class="cat-add-btn" data-ci="${ci}">＋ 商品</button>
+            <button class="cat-add-btn" data-ci="${ci}">${t().addItem}</button>
             <button class="cat-edit-btn" data-editci="${ci}">✏️</button>
             <button class="cat-del-btn" data-delci="${ci}">🗑</button>
           </div>
         </div>
-        ${!(cat.items&&cat.items.length)?`<div class="cat-empty">點「＋ 商品」新增</div>`:
+        ${!(cat.items&&cat.items.length)?`<div class="cat-empty">${t().emptyItems}</div>`:
           cat.items.map((item,ii)=>`
-          <div class="item-row">
+          <div class="item-row ${item.done?'done-row':''}">
             <div class="item-check ${item.done?'done':''}" data-ci="${ci}" data-ii="${ii}" data-toggle="1">
               ${item.done?`<svg width="11" height="11" viewBox="0 0 11 11"><polyline points="2,5.5 4.5,8 9,3" stroke="white" stroke-width="2" fill="none" stroke-linecap="round"/></svg>`:""}
             </div>
@@ -331,9 +418,9 @@ function renderDetail(){
             </div>
           </div>`).join("")}
       </div>`).join("")}
-    </div>`:`<div style="padding:40px;text-align:center;color:#bbb;font-size:14px;">點「＋ 店家」新增第一間店</div>`}
+    </div>`:`<div style="padding:40px;text-align:center;color:#bbb;font-size:14px;">${t().emptyStore}</div>`}
   </div>
-  ${totalKRW?`<div class="total-bar"><div><div class="total-label">韓元預估總計</div><div class="total-twd">${toTWD(totalKRW,"KRW")}</div></div><div class="total-amount">₩${totalKRW.toLocaleString()}</div></div>`:""}
+  ${totalKRW?`<div class="total-bar"><div><div class="total-label">${t().totalLabel}</div><div class="total-twd">${toTWD(totalKRW,"KRW")}</div></div><div class="total-amount">₩${totalKRW.toLocaleString()}</div></div>`:""}
   ${themeModal?renderThemeModal():""}
   ${modal?renderModal():""}
   ${toast?`<div class="toast">${toast}</div>`:""}`;
@@ -341,6 +428,7 @@ function renderDetail(){
 
 function bindDetail(){
   document.getElementById("back-btn").onclick=()=>{currentList=null;activeStoreIdx=0;modal=null;render();};
+  document.getElementById("lang-btn").onclick=()=>toggleLang();
   document.getElementById("theme-open-btn").onclick=e=>{e.stopPropagation();themeModal=!themeModal;render();};
   const av=document.getElementById("av-btn");
   if(av)av.onclick=e=>{e.stopPropagation();menuOpen=!menuOpen;render();};
@@ -356,10 +444,10 @@ function bindDetail(){
   if(store){
     document.getElementById("edit-store-btn").onclick=()=>{modal="edit-store";modalData={name:store.name,emoji:store.emoji||"🛒"};render();};
     document.getElementById("add-cat-btn").onclick=()=>{modal="add-cat";modalData={name:""};render();};
-    document.getElementById("del-store-btn").onclick=()=>{if(confirm(`刪除「${store.name}」？`))delStore();};
+    document.getElementById("del-store-btn").onclick=()=>{if(confirm(t().delStoreConfirm))delStore();};
     document.querySelectorAll(".cat-add-btn").forEach(el=>el.onclick=()=>{modal="add-item";modalData={ci:parseInt(el.dataset.ci),name:"",currency:"KRW",price:"",note:"",image:""};render();});
     document.querySelectorAll("[data-editci]").forEach(el=>el.onclick=()=>{const ci=parseInt(el.dataset.editci);modal="edit-cat";modalData={ci,name:store.categories[ci].name};render();});
-    document.querySelectorAll("[data-delci]").forEach(el=>el.onclick=()=>{if(confirm("刪除此分類？"))delCat(parseInt(el.dataset.delci));});
+    document.querySelectorAll("[data-delci]").forEach(el=>el.onclick=()=>{if(confirm(t().delCatConfirm))delCat(parseInt(el.dataset.delci));});
     document.querySelectorAll("[data-toggle]").forEach(el=>el.onclick=()=>toggleItem(parseInt(el.dataset.ci),parseInt(el.dataset.ii)));
     document.querySelectorAll("[data-edititem]").forEach(el=>el.onclick=()=>{
       const ci=parseInt(el.dataset.ci),ii=parseInt(el.dataset.ii);
@@ -373,77 +461,78 @@ function bindDetail(){
     document.getElementById("theme-close").onclick=()=>{themeModal=false;render();};
     document.querySelectorAll(".theme-dot").forEach(el=>el.onclick=()=>{setTheme(el.dataset.color);render();});
   }
+  if(menuOpen){
+    setTimeout(()=>{document.onclick=e=>{if(!document.getElementById("u-menu")?.contains(e.target)){menuOpen=false;render();document.onclick=null;}};},0);
+  }
   if(modal)bindModal();
 }
 
 function renderModal(){
   if(modal==="new-list"||modal==="edit-list"){
     return `<div class="modal-bg" id="modal-bg"><div class="modal">
-      <div class="modal-title">${modal==="edit-list"?"✏️ 編輯清單":"✨ 新增清單"}</div>
-      <label class="field-label">清單名稱</label>
-      <input class="field-input" id="m-name" placeholder="e.g. 韓國旅行" value="${modalData.name||""}"/>
-      <label class="field-label">Emoji</label>
+      <div class="modal-title">${modal==="edit-list"?t().editListTitle:t().newListTitle}</div>
+      <label class="field-label">${t().listName}</label>
+      <input class="field-input" id="m-name" placeholder="${t().listNamePh}" value="${modalData.name||""}"/>
+      <label class="field-label">${t().emoji}</label>
       <div class="emoji-grid">${EMOJIS.map(em=>`<div class="emoji-opt ${(modalData.emoji||"🛒")===em?'sel':''}" data-emoji="${em}">${em}</div>`).join("")}</div>
-      <div class="modal-btns"><button class="modal-cancel" id="m-cancel">取消</button><button class="modal-save" id="m-save">${modal==="edit-list"?"儲存":"建立"}</button></div>
+      <div class="modal-btns"><button class="modal-cancel" id="m-cancel">${t().cancel}</button><button class="modal-save" id="m-save">${modal==="edit-list"?t().save:t().create}</button></div>
     </div></div>`;
   }
   if(modal==="add-store"||modal==="edit-store"){
     return `<div class="modal-bg" id="modal-bg"><div class="modal">
-      <div class="modal-title">${modal==="edit-store"?"✏️ 編輯店家":"🏪 新增店家"}</div>
-      <label class="field-label">店名</label>
-      <input class="field-input" id="m-name" placeholder="e.g. Olive Young" value="${modalData.name||""}"/>
-      <label class="field-label">Emoji</label>
+      <div class="modal-title">${modal==="edit-store"?t().editStoreTitle:t().newStoreTitle}</div>
+      <label class="field-label">${t().storeName}</label>
+      <input class="field-input" id="m-name" placeholder="${t().storeNamePh}" value="${modalData.name||""}"/>
+      <label class="field-label">${t().emoji}</label>
       <div class="emoji-grid">${EMOJIS.map(em=>`<div class="emoji-opt ${(modalData.emoji||"🛒")===em?'sel':''}" data-emoji="${em}">${em}</div>`).join("")}</div>
-      <div class="modal-btns"><button class="modal-cancel" id="m-cancel">取消</button><button class="modal-save" id="m-save">${modal==="edit-store"?"儲存":"新增"}</button></div>
+      <div class="modal-btns"><button class="modal-cancel" id="m-cancel">${t().cancel}</button><button class="modal-save" id="m-save">${modal==="edit-store"?t().save:t().add}</button></div>
     </div></div>`;
   }
   if(modal==="add-cat"||modal==="edit-cat"){
     return `<div class="modal-bg" id="modal-bg"><div class="modal">
-      <div class="modal-title">${modal==="edit-cat"?"✏️ 編輯分類":"📂 新增分類"}</div>
-      <label class="field-label">分類名稱</label>
-      <input class="field-input" id="m-name" placeholder="e.g. 化妝品類💄" value="${modalData.name||""}"/>
-      <div class="modal-btns"><button class="modal-cancel" id="m-cancel">取消</button><button class="modal-save" id="m-save">${modal==="edit-cat"?"儲存":"新增"}</button></div>
+      <div class="modal-title">${modal==="edit-cat"?t().editCatTitle:t().newCatTitle}</div>
+      <label class="field-label">${t().catName}</label>
+      <input class="field-input" id="m-name" placeholder="${t().catNamePh}" value="${modalData.name||""}"/>
+      <div class="modal-btns"><button class="modal-cancel" id="m-cancel">${t().cancel}</button><button class="modal-save" id="m-save">${modal==="edit-cat"?t().save:t().add}</button></div>
     </div></div>`;
   }
   if(modal==="add-item"||modal==="edit-item"){
     const md=modalData;
     return `<div class="modal-bg" id="modal-bg"><div class="modal">
-      <div class="modal-title">${modal==="edit-item"?"✏️ 編輯商品":"＋ 新增商品"}</div>
-      <label class="field-label">商品名稱</label>
-      <input class="field-input" id="m-item-name" placeholder="e.g. 防曬乳 SPF50" value="${md.name||""}"/>
-      <label class="field-label">商品圖片</label>
+      <div class="modal-title">${modal==="edit-item"?t().editItemTitle:t().newItemTitle}</div>
+      <label class="field-label">${t().itemName}</label>
+      <input class="field-input" id="m-item-name" placeholder="${t().itemNamePh}" value="${md.name||""}"/>
+      <label class="field-label">${t().image}</label>
       <div class="img-upload-row">
         <div class="img-preview" id="img-preview-box">
           ${md.image?`<img src="${md.image}">`:"📷"}
-          ${imgUploading?`<div class="img-uploading">上傳中...</div>`:""}
+          ${imgUploading?`<div class="img-uploading">${t().uploading}</div>`:""}
         </div>
         <div class="img-btns">
-          <button class="img-upload-btn" id="img-upload-btn" ${imgUploading?"disabled":""}>
-            ${imgUploading?"上傳中...":"從相簿選擇"}
-          </button>
-          ${md.image&&!imgUploading?`<button class="img-remove-btn" id="img-remove-btn">移除圖片</button>`:""}
+          <button class="img-upload-btn" id="img-upload-btn" ${imgUploading?"disabled":""}>${imgUploading?t().uploading:t().choosePhoto}</button>
+          ${md.image&&!imgUploading?`<button class="img-remove-btn" id="img-remove-btn">${t().removeImg}</button>`:""}
         </div>
       </div>
-      <label class="field-label">幣種</label>
+      <label class="field-label">${t().currency}</label>
       <select class="field-select" id="m-currency">
-        ${CURRENCIES.map(c=>`<option value="${c.v}" ${(md.currency||"KRW")===c.v?"selected":""}>${c.l}</option>`).join("")}
+        ${CVALS.map((v,i)=>`<option value="${v}" ${(md.currency||"KRW")===v?"selected":""}>${t().currencies[i]}</option>`).join("")}
       </select>
-      <label class="field-label">價格</label>
-      <input class="field-input" id="m-price" type="number" placeholder="e.g. 15000" value="${md.price||""}"/>
+      <label class="field-label">${t().price}</label>
+      <input class="field-input" id="m-price" type="number" placeholder="${t().pricePh}" value="${md.price||""}"/>
       <div class="price-twd-preview" id="twd-preview">${toTWD(md.price,md.currency||"KRW")}</div>
-      <label class="field-label">備註</label>
-      <input class="field-input" id="m-note" placeholder="e.g. 買兩個、限定色" value="${md.note||""}"/>
-      <div class="modal-btns"><button class="modal-cancel" id="m-cancel">取消</button><button class="modal-save" id="m-save">儲存</button></div>
+      <label class="field-label">${t().note}</label>
+      <input class="field-input" id="m-note" placeholder="${t().notePh}" value="${md.note||""}"/>
+      <div class="modal-btns"><button class="modal-cancel" id="m-cancel">${t().cancel}</button><button class="modal-save" id="m-save">${t().save}</button></div>
     </div></div>`;
   }
   if(modal==="share"){
     const url=`${location.origin}${location.pathname}?join=${currentList.id}`;
     return `<div class="modal-bg" id="modal-bg"><div class="modal">
-      <div class="modal-title">🔗 分享清單</div>
-      <p style="color:#888;font-size:14px;margin-bottom:14px;">把連結傳給朋友，對方登入後就能一起編輯。</p>
+      <div class="modal-title">${t().shareTitle}</div>
+      <p style="color:#888;font-size:14px;margin-bottom:14px;">${t().shareDesc}</p>
       <div class="share-box">${url}</div>
-      <button class="copy-btn" id="copy-btn">複製連結</button>
-      <div class="modal-btns"><button class="modal-cancel" id="m-cancel">關閉</button></div>
+      <button class="copy-btn" id="copy-btn">${t().copyLink}</button>
+      <div class="modal-btns"><button class="modal-cancel" id="m-cancel">${t().close}</button></div>
     </div></div>`;
   }
   return "";
@@ -455,7 +544,6 @@ function readItemFields(){
   modalData.currency=document.getElementById("m-currency")?.value||modalData.currency||"KRW";
   modalData.note=document.getElementById("m-note")?.value||modalData.note||"";
 }
-
 function bindModal(){
   const bg=document.getElementById("modal-bg");
   if(bg)bg.onclick=e=>{if(e.target.id==="modal-bg"){modal=null;imgUploading=false;render();}};
@@ -476,25 +564,16 @@ function bindModal(){
     else if(modal==="edit-cat"){modalData.name=document.getElementById("m-name")?.value?.trim()||"";editCat();}
     else if(modal==="add-item"||modal==="edit-item"){readItemFields();modal==="edit-item"?editItem():addItemFn();}
   };
-
-  // 圖片上傳 → Cloudinary
   const iub=document.getElementById("img-upload-btn");
   if(iub)iub.onclick=()=>{
     readItemFields();
     const inp=document.getElementById("img-file-input");
     inp.onchange=async e=>{
-      const f=e.target.files&&e.target.files[0];
-      if(!f)return;
-      inp.value="";
-      imgUploading=true;render();
-      try{
-        const url=await uploadToCloudinary(f);
-        modalData.image=url;
-      }catch(err){
-        showToast("圖片上傳失敗，請再試");
-      }finally{
-        imgUploading=false;render();
-      }
+      const f=e.target.files&&e.target.files[0];if(!f)return;
+      inp.value="";imgUploading=true;render();
+      try{const url=await uploadToCloudinary(f);modalData.image=url;}
+      catch(err){showToast(t().uploadFail);}
+      finally{imgUploading=false;render();}
     };
     inp.click();
   };
@@ -506,51 +585,48 @@ function bindModal(){
   if(pi)pi.oninput=updTWD;
   if(cs)cs.onchange=updTWD;
   const cb=document.getElementById("copy-btn");
-  if(cb)cb.onclick=()=>navigator.clipboard.writeText(`${location.origin}${location.pathname}?join=${currentList.id}`).then(()=>showToast("✅ 連結已複製！"));
+  if(cb)cb.onclick=()=>navigator.clipboard.writeText(`${location.origin}${location.pathname}?join=${currentList.id}`).then(()=>showToast(t().copied));
   setTimeout(()=>{const i=document.getElementById("m-name")||document.getElementById("m-item-name");if(i)i.focus();},50);
 }
 
 // ── DATA OPS ──
 async function saveList(){
   if(!currentList)return;
-  try{
-    await updateDoc(doc(db,"lists",currentList.id),{stores:currentList.stores||[],updatedAt:serverTimestamp()});
-  }catch(e){
-    showToast("儲存失敗："+e.code);
-  }
+  try{await updateDoc(doc(db,"lists",currentList.id),{stores:currentList.stores||[],updatedAt:serverTimestamp()});}
+  catch(e){showToast(t().saveFail+": "+e.code);}
 }
 async function createList(){
-  if(!modalData.name){showToast("請輸入清單名稱");return;}
+  if(!modalData.name){showToast(t().enterListName);return;}
   try{
     await addDoc(collection(db,"lists"),{name:modalData.name,emoji:modalData.emoji||"🛒",ownerId:user.uid,ownerName:user.displayName||"",members:[user.uid],stores:[],createdAt:serverTimestamp()});
-    modal=null;showToast("✨ 清單已建立！");render();
-  }catch(e){showToast("建立失敗："+e.code);}
+    modal=null;showToast(t().created);render();
+  }catch(e){showToast(t().createFail+": "+e.code);}
 }
 async function editList(){
-  if(!modalData.name){showToast("請輸入清單名稱");return;}
+  if(!modalData.name){showToast(t().enterListName);return;}
   currentList.name=modalData.name;currentList.emoji=modalData.emoji;
   try{await updateDoc(doc(db,"lists",currentList.id),{name:modalData.name,emoji:modalData.emoji});}
-  catch(e){showToast("儲存失敗："+e.code);}
+  catch(e){showToast(t().saveFail);}
   modal=null;render();
 }
 async function openList(id){
   try{
     const snap=await getDoc(doc(db,"lists",id));
-    if(!snap.exists()){showToast("找不到清單");return;}
+    if(!snap.exists()){showToast("Not found");return;}
     currentList={id:snap.id,...snap.data()};
     currentList.stores=currentList.stores||[];
     activeStoreIdx=0;modal=null;render();
-  }catch(e){showToast("無法開啟："+e.code);}
+  }catch(e){showToast(t().openFail+": "+e.code);}
 }
 function addStore(){
-  if(!modalData.name){showToast("請輸入店名");return;}
+  if(!modalData.name){showToast(t().enterStoreName);return;}
   currentList.stores=currentList.stores||[];
   currentList.stores.push({name:modalData.name,emoji:modalData.emoji||"🛒",categories:[]});
   activeStoreIdx=currentList.stores.length-1;
   modal=null;saveList();render();
 }
 function editStore(){
-  if(!modalData.name){showToast("請輸入店名");return;}
+  if(!modalData.name){showToast(t().enterStoreName);return;}
   const s=currentList.stores[activeStoreIdx];
   s.name=modalData.name;s.emoji=modalData.emoji||s.emoji;
   modal=null;saveList();render();
@@ -561,14 +637,14 @@ function delStore(){
   saveList();render();
 }
 function addCat(){
-  if(!modalData.name){showToast("請輸入分類名稱");return;}
+  if(!modalData.name){showToast(t().enterCatName);return;}
   const s=currentList.stores[activeStoreIdx];
   s.categories=s.categories||[];
   s.categories.push({name:modalData.name,items:[]});
   modal=null;saveList();render();
 }
 function editCat(){
-  if(!modalData.name){showToast("請輸入分類名稱");return;}
+  if(!modalData.name){showToast(t().enterCatName);return;}
   currentList.stores[activeStoreIdx].categories[modalData.ci].name=modalData.name;
   modal=null;saveList();render();
 }
@@ -577,15 +653,14 @@ function delCat(ci){
   saveList();render();
 }
 function addItemFn(){
-  if(!modalData.name){showToast("請輸入商品名稱");return;}
-  const s=currentList.stores[activeStoreIdx];
-  const cat=s.categories[modalData.ci];
+  if(!modalData.name){showToast(t().enterItemName);return;}
+  const cat=currentList.stores[activeStoreIdx].categories[modalData.ci];
   cat.items=cat.items||[];
   cat.items.push({name:modalData.name,image:modalData.image||"",price:modalData.price||"",currency:modalData.currency||"KRW",note:modalData.note||"",done:false});
   modal=null;saveList();render();
 }
 function editItem(){
-  if(!modalData.name){showToast("請輸入商品名稱");return;}
+  if(!modalData.name){showToast(t().enterItemName);return;}
   const cat=currentList.stores[activeStoreIdx].categories[modalData.ci];
   const old=cat.items[modalData.ii];
   cat.items[modalData.ii]={name:modalData.name,image:modalData.image||"",price:modalData.price||"",currency:modalData.currency||"KRW",note:modalData.note||"",done:old.done||false};
@@ -596,24 +671,27 @@ function delItem(ci,ii){
   saveList();render();
 }
 function toggleItem(ci,ii){
-  const item=currentList.stores[activeStoreIdx].categories[ci].items[ii];
+  const cat=currentList.stores[activeStoreIdx].categories[ci];
+  const item=cat.items[ii];
   item.done=!item.done;
+  // 勾選後移到最後，取消勾選移回最前
+  cat.items.splice(ii,1);
+  if(item.done) cat.items.push(item);
+  else cat.items.unshift(item);
   saveList();render();
 }
 async function delList(){
-  if(!confirm(`刪除「${currentList.name}」？`))return;
+  if(!confirm(t().delListConfirm))return;
   try{
     await deleteDoc(doc(db,"lists",currentList.id));
-    currentList=null;modal=null;showToast("清單已刪除");render();
-  }catch(e){showToast("刪除失敗："+e.code);}
+    currentList=null;modal=null;showToast(t().deleted);render();
+  }catch(e){showToast(t().delFail);}
 }
 async function handleJoin(id){
   try{
     await updateDoc(doc(db,"lists",id),{members:arrayUnion(user.uid)});
-    showToast("✅ 已加入共享清單！");
-    history.replaceState({},"",location.pathname);
-    openList(id);
-  }catch(e){showToast("無法加入");}
+    showToast(t().joined);history.replaceState({},"",location.pathname);openList(id);
+  }catch(e){showToast(t().joinFail);}
 }
 function subLists(){
   if(unsubLists)unsubLists();
