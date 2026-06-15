@@ -335,13 +335,13 @@ function renderUserMenu(){
   </div>`;
 }
 function renderThemeModal(){
-  const rows=[];
-  for(let i=0;i<THEMES.length;i+=11) rows.push(THEMES.slice(i,i+11));
+  const row1=THEMES.slice(0,11);
+  const row2=THEMES.slice(11);
+  const dotRow=(row)=>row.map(c=>`<div class="theme-dot ${userTheme()===c?'sel':''}" style="background:${c};${c==="#FFFFFF"?'border:2px solid #ddd;':''}" data-color="${c}"></div>`).join('');
   return `<div class="modal-bg" id="theme-modal-bg"><div class="modal">
     <div class="modal-title">${t().theme}</div>
-    <div style="display:flex;flex-direction:column;gap:10px;margin-bottom:16px;">
-      ${rows.map(row=>`<div style="display:flex;gap:8px;flex-wrap:wrap;">${row.map(c=>`<div class="theme-dot ${userTheme()===c?'sel':''}" style="background:${c};${c==="#FFFFFF"?'border:2px solid #ddd;':''}" data-color="${c}"></div>`).join('')}</div>`).join('')}
-    </div>
+    <div style="display:flex;gap:8px;margin-bottom:10px;justify-content:center;">${dotRow(row1)}</div>
+    <div style="display:flex;gap:8px;margin-bottom:20px;justify-content:center;">${dotRow(row2)}</div>
     <div class="modal-btns"><button class="modal-cancel" id="theme-close">${t().close}</button></div>
   </div></div>`;
 }
